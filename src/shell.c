@@ -8,7 +8,7 @@ void shell_loop(char *name, char *dir, char *machine)
 
     do
     {
-        printf("%s@%s->%s: ", name, machine, dir);
+        printf("(%s:%s->%s): ", name, machine, dir);
         line = shell_read();
         args = shell_split_line(line);
         status = shell_execute(args);
