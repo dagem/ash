@@ -1,13 +1,22 @@
-FLAGS=-O0 --std=gnu99 -Wall --pedantic
+# Make environment for ash
 
-ash: src/ash.c src/shell.c
-	gcc $^ ${FLAGS} -o $@
+CC=gcc
+CFLAGS= -c -g -Wall -pthread $(INCLUDES)
 
-clean:
-	rm ash
+# Files
+OBJECT_FILES= src/ash.o src/shell.o
 
-install: ash
-	cp ash /usr/bin/ash
+# Productions
+all : ash
 
-uninstall:
-	rm /usr/bin/ash
+ash : $(OBJECT_FILES)
+	$(CC) $(OBJECT_FILES) -o $@
+
+ash.o : src/shell.c src/headers.h
+	$(CC) $(CFLAGS) $< -o $@
+
+shell.o : src/ash.c src/headers.h
+	$(CC) $(CFLAGS) $< -o $@
+
+clean :
+	rm -v ash $(OBJECT_FILES)

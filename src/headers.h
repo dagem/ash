@@ -7,8 +7,8 @@
 #include <sys/wait.h>
 
 #define SHELL_BUFFER_SIZE 1024
-#define SHELL_TOK_BUFFER 64
-#define SHELL_TOK_DELIM " \t\r\n\a"
+#define SHELL_TOKEN_BUFFER 64
+#define SHELL_TOKEN_DELIM " \t\r\n\a"
 
 typedef struct user
 {

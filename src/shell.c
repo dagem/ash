@@ -1,4 +1,4 @@
-#include "shell.h"
+#include "headers.h"
 
 void shell_loop(char *name, char *dir, char *machine)
 {
@@ -56,7 +56,7 @@ char *shell_read(void)
 }
 char **shell_split_line(char *line)
 {
-    int buffer_size = SHELL_BUFFER_SIZE, position = 0;
+    int buffer_size = SHELL_TOKEN_BUFFER, position = 0;
     char **tokens = malloc(buffer_size * sizeof(char));
     char *token;
 
@@ -65,7 +65,7 @@ char **shell_split_line(char *line)
         fprintf(stderr, "allocation error\n");
         exit(EXIT_FAILURE);
     }
-    token = strtok(line, SHELL_TOK_DELIM);
+    token = strtok(line, SHELL_TOKEN_DELIM);
     while(token != NULL)
     {
         tokens[position] = token;
@@ -73,7 +73,7 @@ char **shell_split_line(char *line)
 
         if(position >= buffer_size)
         {
-            buffer_size += SHELL_BUFFER_SIZE;
+            buffer_size += SHELL_TOKEN_BUFFER;
             tokens = realloc(tokens, buffer_size * sizeof(char*));
             if(!tokens)
             {
@@ -81,7 +81,7 @@ char **shell_split_line(char *line)
                 exit(EXIT_FAILURE);
             }
         }
-        token = strtok(NULL, SHELL_TOK_DELIM);
+        token = strtok(NULL, SHELL_TOKEN_DELIM);
     }
     tokens[position] = NULL;
     return tokens;
