@@ -12,7 +12,7 @@ all : ash
 ash : $(OBJECT_FILES)
 	$(CC) $(OBJECT_FILES) -o $@
 
-ash.o : src/shell.c src/headers.h
+ash.o : src/shell.c src/shell.h
 	$(CC) $(CFLAGS) $< -o $@
 
 shell.o : src/ash.c src/headers.h

@@ -1,5 +1,5 @@
-#ifndef __SHELL_HEADER_H__
-#define __SHELL_HEADER_H__
+#ifndef __HEADERS_H__
+#define __HEADERS_H__
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
@@ -17,8 +17,5 @@ typedef struct user
     char *dir;
 }user;
 
-void shell_loop(char *name, char *dir, char *machine);
-char *shell_read(void);
-char **shell_split_line(char *line);
-int shell_execute(char **exec);
-#endif /*_SHELL_HEADER__*/
+
+#endif /*__HEADERS_H__*/

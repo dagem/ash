@@ -1,4 +1,4 @@
-#include "headers.h"
+#include "shell.h"
 
 user E;
 void init()
@@ -13,6 +13,7 @@ void free_user(void)
     free(E.dir);
     free(E.machine);
 }
+
 int main (int argc, char **argv)
 {
     char buf[1024];
@@ -27,7 +28,9 @@ int main (int argc, char **argv)
         E.machine = buf2;
     }
 
-    shell_loop(E.logon, E.dir, E.machine);
+    shell_loop(E.dir, E.logon,E.machine);
 
     free_user();
+
+    return EXIT_SUCCESS;
 }
