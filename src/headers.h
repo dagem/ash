@@ -5,16 +5,19 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 
 #define SHELL_BUFFER_SIZE 1024
 #define SHELL_TOKEN_BUFFER 64
 #define SHELL_TOKEN_DELIM " \t\r\n\a"
+#define PATH_MAX 2048
+// #define PATH_MAX 2048
 
 typedef struct user
 {
     char *logon;
     char *machine;
-    char *dir;
+    char dir[PATH_MAX];
 }user;
 
 

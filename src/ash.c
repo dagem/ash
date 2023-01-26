@@ -30,7 +30,5 @@ int main (int argc, char **argv)
 
     shell_loop(E.dir, E.logon,E.machine);
 
-    free_user();
-
     return EXIT_SUCCESS;
 }

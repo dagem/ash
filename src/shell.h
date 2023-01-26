@@ -15,5 +15,5 @@ int shell_exit(char **args);
 int shell_help(char **args);
 
 /*Custom shell commands*/
-
+void sigint_handler(int sig);
 #endif /*__SHELL_HEADER_H__*/

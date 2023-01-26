@@ -1,4 +1,7 @@
 #include "shell.h"
+#include <signal.h>
+#include <string.h>
+#include <unistd.h>
 
 user B;
 char *builtin_str[] = {
@@ -18,17 +21,17 @@ int shell_number_of_builtins()
 }
 void shell_loop(char *dir, ...)
 {
+    
     char *line;
     char **args;
     int status;
-    
     char buf[1024];
     char buf2[1024];
     B.logon = getlogin();
 
     if(getcwd(buf, sizeof(buf)) != NULL)
     {
-        B.dir = strrchr(buf, '/') + 1;
+        strcpy(B.dir, strrchr(buf, '/') + 1);
     }
     if(gethostname(buf2, sizeof(buf2)) == 0)
     {
@@ -40,6 +43,8 @@ void shell_loop(char *dir, ...)
         line = shell_read();
         args = shell_split_line(line);
         status = shell_execute(args);
+        
+        sigint_handler(status);
 
         free(line);
         free(args);
@@ -149,24 +154,46 @@ int shell_launch(char **args)
 }
 int shell_cd(char **args)
 {
-    if(args[1] != NULL)
-    {
-      fprintf(stderr, "expected argument to \"cd\"\n");
+    struct stat exists;
+    char *tmp = malloc(sizeof(char) * 255);
+    if(args[1] != NULL && stat(args[1], &exists) == 0 && S_ISDIR(exists.st_mode))
+    {  
+      chdir(args[1]);
+      if(strcmp(args[1], "..") == 0)
+      {
+        char buf[255];
+        if(getcwd(buf, sizeof(buf)) != NULL)
+        {
+            strcpy(B.dir, buf);
+        }
+        strcpy(tmp, strrchr(B.dir, '/')+1);
+        shell_loop(tmp);
+      }
+      else
+      {
+        strcpy(tmp, args[1]);
+      }
+        shell_loop(tmp);    
+      free(tmp);
     }
-    else if(args[1] == NULL)
+    else if(args[1] == NULL || strcmp(args[1], "~") == 0)
     {
-        char *tmp = malloc(sizeof(char) * 256);
+        
         strcpy(tmp, "/home/");
         
         strcat(tmp,getlogin());
         chdir(tmp);
-        shell_loop(tmp);
+        shell_loop("~");
         
         free(tmp);
     }
     else if(chdir(args[1]) != 0)
     {
-        perror("shell");
+        perror(args[1]);
+    }
+    else
+    {
+        chdir(args[1]);  
     }
     return 1;
 }
@@ -176,6 +203,11 @@ int shell_help(char **args)
 }
 int shell_exit(char **args)
 {
+    if(strcmp(args[1], "exit") == 0)
+    {
+        raise(SIGTERM);
+        return 1;
+    }
     return 0;
 }
 int shell_execute(char **args)
@@ -194,4 +226,9 @@ int shell_execute(char **args)
     }
     return shell_launch(args);
 }
-
+void sigint_handler(int sig) /* SIGINT handler */
+{
+	if(sig == SIGINT){
+        printf("use command exit");
+	}
+}

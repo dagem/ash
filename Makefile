@@ -9,6 +9,9 @@ OBJECT_FILES= src/ash.o src/shell.o
 # Productions
 all : ash
 
+debug: $(OBJECT_FILES)
+	$(CC) $^ -fsanitize=address -o $@
+
 ash : $(OBJECT_FILES)
 	$(CC) $(OBJECT_FILES) -o $@
 
