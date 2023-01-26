@@ -158,9 +158,9 @@ int shell_cd(char **args)
     char *tmp = malloc(sizeof(char) * 255);
     if(args[1] != NULL && stat(args[1], &exists) == 0 && S_ISDIR(exists.st_mode))
     {  
-      chdir(args[1]);
       if(strcmp(args[1], "..") == 0)
       {
+        chdir(args[1]);
         char buf[255];
         if(getcwd(buf, sizeof(buf)) != NULL)
         {
@@ -169,33 +169,32 @@ int shell_cd(char **args)
         strcpy(tmp, strrchr(B.dir, '/')+1);
         shell_loop(tmp);
       }
+      else if(strstr(args[1], "/") != NULL)
+      {
+        chdir(args[1]);
+        strcpy(tmp, strrchr(args[1], '/')+1);
+      }
       else
       {
+        chdir(args[1]);
         strcpy(tmp, args[1]);
       }
-        shell_loop(tmp);    
-      free(tmp);
+      shell_loop(tmp);    
     }
     else if(args[1] == NULL || strcmp(args[1], "~") == 0)
     {
-        
         strcpy(tmp, "/home/");
-        
         strcat(tmp,getlogin());
         chdir(tmp);
         shell_loop("~");
-        
-        free(tmp);
     }
     else if(chdir(args[1]) != 0)
     {
         perror(args[1]);
     }
-    else
-    {
-        chdir(args[1]);  
-    }
+    free(tmp);
     return 1;
+     
 }
 int shell_help(char **args)
 {
